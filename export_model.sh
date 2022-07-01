@@ -1,4 +1,4 @@
-cd ..
+
 python PaddleRS/deploy/export/export_model.py \
         --model_dir model/best_model/change_detection \
         --save_dir model/inference_model/change_detection \

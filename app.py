@@ -81,12 +81,12 @@ def target_detection():
         utils.judge_path('target_detection')
         try:
             result = td.predict(img_file=np.array(Image.open(image)))
-            path = utils.get_path_name('target_detection') + '-result.png'
-            imsave(path, result['label_map'], check_contrast=False)
-            url = utils.uploadPic(path)
-            utils.delete_temp_pic(path)
+            # path = utils.get_path_name('target_detection') + '-result.png'
+            # imsave(path, result['label_map'], check_contrast=False)
+            # url = utils.uploadPic(path)
+            # utils.delete_temp_pic(path)
 
-            return unifiedResponse.result(data={'url': url})
+            return unifiedResponse.result(data=result[0])
         except Exception as e:
             print(traceback.format_exc())
             return unifiedResponse.error('图片预测失败')
