@@ -236,7 +236,7 @@ def target_detection():
             vis = visualize_detection(
                 vis, result,
                 color=np.asarray([[0, 255, 0]], dtype=np.uint8),
-                threshold=0.2, save_dir=None
+                threshold=0.4, save_dir=None
             )
             path = utils.get_path_name('target_detection') + '-result.png'
             imsave(path, vis, check_contrast=False)
