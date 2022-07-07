@@ -10,7 +10,7 @@ from flask import Flask, request
 import paddlers as pdrs
 from skimage import img_as_ubyte
 import urllib
-
+from paddlers.tasks.utils.visualize import visualize_detection
 import unifiedResponse
 from skimage.io import imread, imsave, show
 
@@ -194,23 +194,32 @@ def change_detection():
 td = pdrs.deploy.Predictor('model/inference_model/target_detection')
 
 
-@app.route('/test', methods=['POST'])
-def test():
-    try:
-        img_src = "http://cup.lijx.cloud/img/gallery/2022/7/2/ad4a5ace-ab67-4a1a-8c00-06ee1ce9feb4"
-        cap = cv2.VideoCapture(img_src)
-        if (cap.isOpened()):
-            ret, img = cap.read()
-            result = td.predict(img_file=np.array(img))
-            # path = utils.get_path_name('target_detection') + '-result.png'
-            # imsave(path, result['label_map'], check_contrast=False)
-            # url = utils.uploadPic(path)
-            # utils.delete_temp_pic(path)
-
-            return unifiedResponse.result(data=result[0])
-    except Exception as e:
-        print(traceback.format_exc())
-        return unifiedResponse.error('图片预测失败')
+# @app.route('/test', methods=['POST'])
+# def test():
+#     try:
+#         image_url = "http://cup.lijx.cloud/img/target_detection/2022/07/07/overpass_4.jpg"
+#         resp = urllib.request.urlopen(image_url)
+#         image = np.asarray(bytearray(resp.read()), dtype="uint8")
+#         image = cv2.imdecode(image, cv2.IMREAD_COLOR)
+#         utils.judge_path('target_detection')
+#         result = td.predict(img_file=image)
+#         vis = image
+#         vis = visualize_detection(
+#             vis, result,
+#             color=np.asarray([[0, 255, 0]], dtype=np.uint8),
+#             threshold=0.2, save_dir=None
+#         )
+#         path = utils.get_path_name('target_detection') + '-result.png'
+#         imsave(path, vis, check_contrast=False)
+#         url = utils.uploadPic(path)
+#         utils.delete_temp_pic(path)
+#         cv2.imshow('a', vis)
+#         cv2.waitKey(0)
+#
+#         return unifiedResponse.result(data=url)
+#     except Exception as e:
+#         print(traceback.format_exc())
+#         return unifiedResponse.error('图片预测失败')
 
 
 @app.route('/target_detection', methods=['POST'])
@@ -223,12 +232,18 @@ def target_detection():
         utils.judge_path('target_detection')
         try:
             result = td.predict(img_file=image)
-            # path = utils.get_path_name('target_detection') + '-result.png'
-            # imsave(path, result['label_map'], check_contrast=False)
-            # url = utils.uploadPic(path)
-            # utils.delete_temp_pic(path)
+            vis = image
+            vis = visualize_detection(
+                vis, result,
+                color=np.asarray([[0, 255, 0]], dtype=np.uint8),
+                threshold=0.2, save_dir=None
+            )
+            path = utils.get_path_name('target_detection') + '-result.png'
+            imsave(path, vis, check_contrast=False)
+            url = utils.uploadPic(path)
+            utils.delete_temp_pic(path)
 
-            return unifiedResponse.result(data=result[0])
+            return unifiedResponse.result(data=url)
         except Exception as e:
             print(traceback.format_exc())
             return unifiedResponse.error('图片预测失败')
